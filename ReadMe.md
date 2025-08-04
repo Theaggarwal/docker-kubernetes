@@ -1,8 +1,7 @@
 # Host and communicate Backend service with database on kubernetes pod
 
 ## Useful links
-**Code Repository:**
-
+**Code Repository:** https://github.com/Theaggarwal/docker-kubernetes
 **Docker hub URL:** https://hub.docker.com/repository/docker/theaggarwal/node-mongo-api/general
 
 URL for Service API tier to view the records from backend tier:
