@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-seed-config
+data:
+  seed.json: |
+    [
+      {
+        "name": "Sushil Aggarwal",
+        "email": "theaggarwal1@gmail.com"
+      },
+      {
+        "name": "Test user 2",
+        "email": "theaggarwal2@gmail.com"
+      },
+      {
+        "name": "Test user 3",
+        "email": "theaggarwal3@gmail.com"                          
+      },
+      {
+        "name": "Test user 4",
+        "email": "theaggarwal4@gmail.com"
+      },
+      {
+        "name": "Test user 5",
+        "email": "theaggarwal5@gmail.com"                          
+      }
+    ]
+    

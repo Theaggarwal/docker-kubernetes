@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-mongo-api-deployment
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: node-mongo-api
+  template:
+    metadata:
+      labels:
+        app: node-mongo-api
+    spec:
+      containers:
+      - name: node-mongo-api       
+        image: theaggarwal/node-mongo-api:v9  # to pick from ACR >sacontainerregistry.azurecr.io/saapp:v1
+        #image: sacontainerregistry.azurecr.io/node-mongo-api:v7
+        ports:
+        - containerPort: 3000
+        env:
+        - name: MONGO_URI
+          valueFrom:
+            secretKeyRef:
+              name: db-connection
+              key: seedMongoUri #mongoUri
+        - name: MONGO_USER
+          valueFrom:
+            secretKeyRef:
+              name: mongo-creds
+              key: username
+        - name: MONGO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongo-creds
+              key: password
+        - name: MONGO_AUTH_SOURCE
+          valueFrom:
+            secretKeyRef:
+              name: mongo-creds
+              key: authSource 
+        - name: MONGO_DB
+          valueFrom:
+            secretKeyRef:
+              name: db-connection
+              key: db           
+        - name: MONGO_DB_Collection
+          valueFrom:
+            secretKeyRef:
+              name: db-connection
+              key: dbCollection

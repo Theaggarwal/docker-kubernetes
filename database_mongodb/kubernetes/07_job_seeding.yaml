@@ -1,0 +1,67 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mongo-seed-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: mongo-seeder
+        image: mongo
+        command: ["mongoimport"]
+        args:
+          [
+            "--uri", "$(MONGO_HOST)",
+            "--username", "$(MONGO_USERNAME)",
+            "--password", "$(MONGO_PASSWORD)",
+            "--authenticationDatabase", "$(MONGO_AUTHSOURCE)",
+            "--db", "$(MONGO_DB)",
+            "--collection", "$(MONGO_DB_Collection)",
+            "--type", "json",
+            "--file", "/seed/seed.json",
+            "--jsonArray"
+          ]
+        env:
+        - name: MONGO_HOST
+          valueFrom:
+            secretKeyRef:
+              name: db-connection
+              key: seedMongoUri
+        - name: MONGO_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongo-creds
+              key: username
+        - name: MONGO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongo-creds
+              key: password
+        - name: MONGO_AUTHSOURCE
+          valueFrom:
+            secretKeyRef:
+              name: mongo-creds
+              key: authSource
+        - name: MONGO_DB
+          valueFrom:
+            secretKeyRef:
+              name: db-connection
+              key: db
+        - name: MONGO_DB_Collection
+          valueFrom:
+            secretKeyRef:
+              name: db-connection
+              key: dbCollection              
+        volumeMounts:
+        - name: seed-volume
+          mountPath: /seed
+          readOnly: true  # Optional: safe since it's read-only seed data
+      restartPolicy: Never
+      volumes:
+      - name: seed-volume
+        configMap:
+          name: mongo-seed-config
+          items:
+          - key: seed.json
+            path: seed.json
+  
